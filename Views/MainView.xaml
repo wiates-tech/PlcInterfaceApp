@@ -1,0 +1,103 @@
+﻿<UserControl x:Class="PlcInterfaceApp.Views.MainView"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:vm="clr-namespace:PlcInterfaceApp.ViewModels"
+      xmlns:local="clr-namespace:PlcInterfaceApp.Views"
+      xmlns:models="clr-namespace:PlcInterfaceApp.Models">
+
+
+    <DockPanel>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="250"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Left Panel: Tabs -->
+            <TabControl Grid.Column="0" Margin="10">
+                <TabItem Header="Tag Configuration">
+                    <TreeView ItemsSource="{Binding Groups}" SelectedItemChanged="TreeView_SelectedItemChanged">
+                        <TreeView.Resources>
+                            <HierarchicalDataTemplate DataType="{x:Type models:Group}" ItemsSource="{Binding SubGroups}">
+                                <TextBlock Text="{Binding Name}" />
+                            </HierarchicalDataTemplate>
+                            <HierarchicalDataTemplate DataType="{x:Type models:SubGroup}" ItemsSource="{Binding Tags}">
+                                <TextBlock Text="{Binding Name}" />
+                            </HierarchicalDataTemplate>
+                            <DataTemplate DataType="{x:Type models:TagItem}">
+                                <TextBlock Text="{Binding Name}" />
+                            </DataTemplate>
+                        </TreeView.Resources>
+                    </TreeView>
+                </TabItem>
+
+                <TabItem Header="PLC Settings">
+                    <StackPanel Margin="10">
+                        <Label Content="PLC Type:" />
+                        <ComboBox ItemsSource="{Binding PlcTypes}" SelectedItem="{Binding SelectedPlcType}" />
+                        <Label Content="IP Address:" Margin="0,10,0,0" />
+                        <TextBox Text="{Binding IpAddress}" />
+                        <Label Content="Port:" Margin="0,10,0,0" />
+                        <TextBox Text="{Binding Port}" />
+                        <Button Content="Connect" Command="{Binding ConnectCommand}" Margin="0,15,0,0" Width="100"/>
+                    </StackPanel>
+                </TabItem>
+            </TabControl>
+
+            <!-- Right Panel -->
+            <Grid Grid.Column="1" Margin="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" FontWeight="Bold" FontSize="14" Text="Tag Details" Margin="0,0,0,10"/>
+
+                <Grid Grid.Row="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="120"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Label Content="Group:" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center"/>
+                    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding SelectedTag.Name}" IsReadOnly="True"/>
+
+                    <Label Content="Subgroup:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/>
+                    <TextBox Grid.Row="1" Grid.Column="1" Text="" IsReadOnly="True"/>
+
+                    <Label Content="Tag Name:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center"/>
+                    <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding SelectedTag.Name}" />
+
+                    <Label Content="Data Type:" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center"/>
+                    <ComboBox Grid.Row="3" Grid.Column="1" SelectedItem="{Binding SelectedDataType}">
+                        <ComboBoxItem Content="Int"/>
+                        <ComboBoxItem Content="Real"/>
+                        <ComboBoxItem Content="Bool"/>
+                        <ComboBoxItem Content="Char"/>
+                        <ComboBoxItem Content="String"/>
+                    </ComboBox>
+
+                    <Label Content="Address:" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center"/>
+                    <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding Address}" />
+
+                    <Label Content="Value:" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center"/>
+                    <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding Value}" />
+                </Grid>
+
+                <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,10,0,0">
+                    <Button Content="Read" Command="{Binding ReadCommand}" Width="100" Margin="0,0,10,0"/>
+                    <Button Content="Write" Command="{Binding WriteCommand}" Width="100"/>
+                </StackPanel>
+            </Grid>
+        </Grid>
+    </DockPanel>
+</UserControl>
