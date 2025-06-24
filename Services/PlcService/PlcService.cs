@@ -122,7 +122,7 @@ namespace PlcInterfaceApp.Services
                                 return $"{high}{low}".Trim('\0');
 
                             case "String":
-                                int numRegisters = 10; // change as needed
+                                int numRegisters = 10;
                                 var regs = modbusClient.ReadHoldingRegisters(addr, numRegisters);
                                 byte[] strBytes = new byte[numRegisters * 2];
                                 for (int i = 0; i < numRegisters; i++)
@@ -235,10 +235,10 @@ namespace PlcInterfaceApp.Services
                             case "String":
                                 string strValue = value ?? "";
                                 int maxLen = 10;
-                                byte[] buffer = new byte[2 + maxLen]; // 2 header + 10 chars
+                                byte[] buffer = new byte[2 + maxLen];
 
-                                buffer[0] = (byte)maxLen; // max length
-                                buffer[1] = (byte)Math.Min(strValue.Length, maxLen); // actual length
+                                buffer[0] = (byte)maxLen;
+                                buffer[1] = (byte)Math.Min(strValue.Length, maxLen);
 
                                 Encoding.ASCII.GetBytes(strValue.PadRight(maxLen, '\0'), 0, Math.Min(strValue.Length, maxLen), buffer, 2);
 
