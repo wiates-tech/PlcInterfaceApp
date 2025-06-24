@@ -9,8 +9,8 @@
     <RootNamespace>PlcInterfaceApp</RootNamespace>
     <AssemblyName>PlcInterfaceApp</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-	  <LangVersion>10.0</LangVersion>
-	  <FileAlignment>512</FileAlignment>
+    <LangVersion>10.0</LangVersion>
+    <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -79,13 +79,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Helpers\BoolToVisibilityConverter.cs" />
     <Compile Include="Models\Group.cs" />
     <Compile Include="Models\SubGroup.cs" />
     <Compile Include="Models\TagItem.cs" />
-    <Compile Include="Services\IPlcService.cs" />
-    <Compile Include="Services\PlcConnectionService.cs" />
-    <Compile Include="Services\PlcService.cs" />
-    <Compile Include="TagModels.cs" />
+    <Compile Include="Services\DialogService\DialogService.cs" />
+    <Compile Include="Services\DialogService\IDialogService.cs" />
+    <Compile Include="Services\PlcService\IPlcService.cs" />
+    <Compile Include="Services\PlcService\PlcService.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\RelayCommand.cs" />
@@ -136,8 +137,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Helpers\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

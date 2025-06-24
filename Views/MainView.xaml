@@ -3,8 +3,116 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:vm="clr-namespace:PlcInterfaceApp.ViewModels"
       xmlns:local="clr-namespace:PlcInterfaceApp.Views"
+      xmlns:helpers="clr-namespace:PlcInterfaceApp.Helpers"
       xmlns:models="clr-namespace:PlcInterfaceApp.Models">
 
+    <UserControl.Resources>
+
+        <helpers:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+
+        <Style TargetType="{x:Type TextBlock}">
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="#333"/>
+        </Style>
+
+        <Style TargetType="Label">
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Foreground" Value="#444"/>
+            <Setter Property="Margin" Value="0,5,0,2"/>
+        </Style>
+
+        <Style TargetType="TextBox">
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Padding" Value="4"/>
+            <Setter Property="Margin" Value="0,2,0,6"/>
+        </Style>
+
+        <Style TargetType="ComboBox">
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Padding" Value="4"/>
+            <Setter Property="Margin" Value="0,2,0,6"/>
+        </Style>
+
+        <Style TargetType="TreeViewItem">
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Foreground" Value="#333"/>
+            <Setter Property="Margin" Value="2"/>
+            <Setter Property="Padding" Value="4,2"/>
+        </Style>
+
+        <Style x:Key="BlueOutlinedButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#0078D7"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="Margin" Value="5,4"/>
+            <Setter Property="Width" Value="150"/>
+            <Setter Property="Height" Value="20"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="BorderThickness" Value="1.5"/>
+            <Setter Property="BorderBrush" Value="#0078D7"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="6">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#E5F1FB"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#CCE4F7"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        
+        <Style x:Key="BlueActionButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#0078D7"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="Margin" Value="5,4"/>
+            <Setter Property="Width" Value="100"/>
+            <Setter Property="Height" Value="36"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                        CornerRadius="6"
+                        SnapsToDevicePixels="True">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#005A9E"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#004B8D"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+    </UserControl.Resources>
 
     <DockPanel>
         <Grid>
@@ -16,35 +124,63 @@
             <!-- Left Panel: Tabs -->
             <TabControl Grid.Column="0" Margin="10">
                 <TabItem Header="Tag Configuration">
-                    <TreeView ItemsSource="{Binding Groups}" SelectedItemChanged="TreeView_SelectedItemChanged">
-                        <TreeView.Resources>
-                            <HierarchicalDataTemplate DataType="{x:Type models:Group}" ItemsSource="{Binding SubGroups}">
-                                <TextBlock Text="{Binding Name}" />
-                            </HierarchicalDataTemplate>
-                            <HierarchicalDataTemplate DataType="{x:Type models:SubGroup}" ItemsSource="{Binding Tags}">
-                                <TextBlock Text="{Binding Name}" />
-                            </HierarchicalDataTemplate>
-                            <DataTemplate DataType="{x:Type models:TagItem}">
-                                <TextBlock Text="{Binding Name}" />
-                            </DataTemplate>
-                        </TreeView.Resources>
-                    </TreeView>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="230"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto" Margin="10">
+                            <StackPanel>
+                                <TreeView ItemsSource="{Binding Groups}" SelectedItemChanged="TreeView_SelectedItemChanged" Height="300">
+                                    <TreeView.Resources>
+                                        <HierarchicalDataTemplate DataType="{x:Type models:Group}" ItemsSource="{Binding SubGroups}">
+                                            <TextBlock Text="{Binding Name}" />
+                                        </HierarchicalDataTemplate>
+                                        <HierarchicalDataTemplate DataType="{x:Type models:SubGroup}" ItemsSource="{Binding Tags}">
+                                            <TextBlock Text="{Binding Name}" />
+                                        </HierarchicalDataTemplate>
+                                        <DataTemplate DataType="{x:Type models:TagItem}">
+                                            <TextBlock Text="{Binding Name}" />
+                                        </DataTemplate>
+                                    </TreeView.Resources>
+                                </TreeView>
+
+                                <GroupBox Header="Manage Hierarchy" Margin="0,0,0,0">
+                                    <StackPanel Margin="10">
+                                        <Button Content="Add Group" Command="{Binding AddGroupCommand}" Style="{StaticResource BlueOutlinedButtonStyle}"/>
+                                        <Button Content="Delete Group" Command="{Binding DeleteGroupCommand}" Style="{StaticResource BlueOutlinedButtonStyle}"/>
+                                        <Button Content="Add SubGroup" Command="{Binding AddSubGroupCommand}" Style="{StaticResource BlueOutlinedButtonStyle}"/>
+                                        <Button Content="Delete SubGroup" Command="{Binding DeleteSubGroupCommand}" Style="{StaticResource BlueOutlinedButtonStyle}"/>
+                                        <Button Content="Add Tag" Command="{Binding AddTagCommand}" Style="{StaticResource BlueOutlinedButtonStyle}"/>
+                                        <Button Content="Delete Tag" Command="{Binding DeleteTagCommand}" Style="{StaticResource BlueOutlinedButtonStyle}"/>
+                                    </StackPanel>
+                                </GroupBox>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Grid>
                 </TabItem>
 
                 <TabItem Header="PLC Settings">
                     <StackPanel Margin="10">
                         <Label Content="PLC Type:" />
                         <ComboBox ItemsSource="{Binding PlcTypes}" SelectedItem="{Binding SelectedPlcType}" />
-                        <Label Content="IP Address:" Margin="0,10,0,0" />
+                        <Label Content="IP Address:" />
                         <TextBox Text="{Binding IpAddress}" />
-                        <Label Content="Port:" Margin="0,10,0,0" />
+                        <Label Content="Port:" />
                         <TextBox Text="{Binding Port}" />
-                        <Button Content="Connect" Command="{Binding ConnectCommand}" Margin="0,15,0,0" Width="100"/>
+                        <Button Content="Connect"
+        Command="{Binding ConnectCommand}"
+        IsEnabled="{Binding IsNotConnecting}" />
+
+                        <ProgressBar IsIndeterminate="True"
+             Height="4"
+             Visibility="{Binding IsConnecting, Converter={StaticResource BoolToVisibilityConverter}}" />
+
                     </StackPanel>
                 </TabItem>
             </TabControl>
 
-            <!-- Right Panel -->
             <Grid Grid.Column="1" Margin="10">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -69,33 +205,28 @@
                     </Grid.ColumnDefinitions>
 
                     <Label Content="Group:" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center"/>
-                    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding SelectedTag.Name}" IsReadOnly="True"/>
+                    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding SelectedGroup.Name}" IsReadOnly="True"/>
 
                     <Label Content="Subgroup:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/>
-                    <TextBox Grid.Row="1" Grid.Column="1" Text="" IsReadOnly="True"/>
+                    <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding SelectedSubGroup.Name}" IsReadOnly="True"/>
 
                     <Label Content="Tag Name:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center"/>
                     <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding SelectedTag.Name}" />
 
                     <Label Content="Data Type:" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center"/>
-                    <ComboBox Grid.Row="3" Grid.Column="1" SelectedItem="{Binding SelectedDataType}">
-                        <ComboBoxItem Content="Int"/>
-                        <ComboBoxItem Content="Real"/>
-                        <ComboBoxItem Content="Bool"/>
-                        <ComboBoxItem Content="Char"/>
-                        <ComboBoxItem Content="String"/>
-                    </ComboBox>
+                    <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{Binding DataTypes}" SelectedItem="{Binding SelectedTag.DataType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
                     <Label Content="Address:" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center"/>
-                    <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding Address}" />
+                    <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding SelectedTag.Address}" />
 
                     <Label Content="Value:" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center"/>
-                    <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding Value}" />
+                    <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding SelectedTag.Value}" />
                 </Grid>
 
                 <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,10,0,0">
-                    <Button Content="Read" Command="{Binding ReadCommand}" Width="100" Margin="0,0,10,0"/>
-                    <Button Content="Write" Command="{Binding WriteCommand}" Width="100"/>
+                    <Button Content="Read" Command="{Binding ReadCommand}" Style="{StaticResource BlueActionButtonStyle}" />
+                    <Button Content="Write" Command="{Binding WriteCommand}" Style="{StaticResource BlueActionButtonStyle}" />
+
                 </StackPanel>
             </Grid>
         </Grid>

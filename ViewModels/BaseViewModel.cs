@@ -1,15 +1,20 @@
 ﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
 
 namespace PlcInterfaceApp.ViewModels
 {
     public abstract class BaseViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged(string propertyName) =>
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-        protected void OnPropertyChanged([CallerMemberName] string name = null)
+        protected bool SetProperty<T>(ref T field, T value, string propertyName)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+            if (Equals(field, value)) return false;
+            field = value;
+            OnPropertyChanged(propertyName);
+            return true;
         }
     }
+
 }

@@ -11,5 +11,6 @@ namespace PlcInterfaceApp.Services
         Task<bool> ConnectAsync(string type, string ip, int port);
         Task<string> ReadValueAsync(string type, string address, string dataType);
         Task<bool> WriteValueAsync(string type, string address, string dataType, string value);
+        bool IsConnected { get; }
     }
 }

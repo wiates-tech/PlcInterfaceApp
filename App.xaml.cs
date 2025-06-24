@@ -1,17 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using PlcInterfaceApp.Services;
+using PlcInterfaceApp.Services.DialogService;
 using System.Windows;
 
 namespace PlcInterfaceApp
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
     public partial class App : Application
     {
+        public static IPlcService PlcService { get; private set; }
+        public static IDialogService DialogService { get; private set; }
+
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            base.OnStartup(e);
+            PlcService = new PlcService();
+            DialogService = new DialogService();
+        }
     }
 }
