@@ -59,7 +59,7 @@ namespace PlcInterfaceApp.Services
                 }
                 else if (type == "S7")
                 {
-                    s7Plc = new Plc(CpuType.S71500, ip, 0, 1);
+                    s7Plc = new Plc(CpuType.S71200, ip, 0, 1);
 
                     return await Task.Run(() =>
                     {
@@ -138,13 +138,13 @@ namespace PlcInterfaceApp.Services
                         switch (dataType)
                         {
                             case "Int":
-                                return ((short)s7Plc.Read($"DB1.DBW{addr}")).ToString();
+                                return s7Plc.Read($"DB1.DBW{addr}").ToString();
 
                             case "Real":
-                                return ((float)s7Plc.Read(DataType.DataBlock, 1, addr, VarType.Real, 1)).ToString("F2");
+                                return s7Plc.Read(DataType.DataBlock, 1, addr, VarType.Real, 1).ToString();
 
                             case "Bool":
-                                return ((bool)s7Plc.Read($"DB1.DBX{addr}")).ToString();
+                                return s7Plc.Read($"DB1.DBX2.{addr}").ToString();
 
                             case "Char":
                                 byte b = (byte)s7Plc.Read(DataType.DataBlock, 1, addr, VarType.Byte, 1);
@@ -225,7 +225,7 @@ namespace PlcInterfaceApp.Services
                                 break;
 
                             case "Bool":
-                                s7Plc.Write($"DB1.DBX{addr}", bool.Parse(value));
+                                s7Plc.Write($"DB1.DBX2.{addr}", bool.Parse(value));
                                 break;
 
                             case "Char":
@@ -233,14 +233,23 @@ namespace PlcInterfaceApp.Services
                                 break;
 
                             case "String":
-                                s7Plc.Write(DataType.DataBlock, 1, addr, value.PadRight(10, '\0'));
+                                string strValue = value ?? "";
+                                int maxLen = 10;
+                                byte[] buffer = new byte[2 + maxLen]; // 2 header + 10 chars
+
+                                buffer[0] = (byte)maxLen; // max length
+                                buffer[1] = (byte)Math.Min(strValue.Length, maxLen); // actual length
+
+                                Encoding.ASCII.GetBytes(strValue.PadRight(maxLen, '\0'), 0, Math.Min(strValue.Length, maxLen), buffer, 2);
+
+                                s7Plc.WriteBytes(DataType.DataBlock, 1, addr, buffer);
                                 break;
                         }
                     }
 
                     return true;
                 }
-                catch
+                catch(Exception ex)
                 {
                     return false;
                 }
